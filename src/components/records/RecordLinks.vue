@@ -8,6 +8,11 @@ q-card-section.q-pt-xs
           q-badge(outline color="primary") {{ name }}
         td
           a(:href="uri" target="_blank") {{ uri }}
+      tr
+        td
+          q-badge(outline color="accent") handle
+        td
+          a(:href="handle" target="_blank") {{ handle }}
 </template>
 
 <script>
@@ -16,6 +21,7 @@ import { Component, Vue } from 'vue-property-decorator'
 export default @Component({
   name: 'RecordLinks',
   props: {
+    handle: String,
     links: Object
   },
   components: {

@@ -17,8 +17,8 @@ export default @Component({
   name: 'RecordSystemMetadata',
   props: {
     identifier: String,
-    created: String,
-    updated: String,
+    created: String | Date,
+    updated: String | Date,
     revision: Number
   },
   components: {

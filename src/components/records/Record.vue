@@ -76,7 +76,7 @@
             color="black"
             icon="fullscreen"
             :label="$t('labels.recordDetailsBtn')")
-        record-links(:links="links")
+        record-links(:links="links" :handle="handleLink")
 </template>
 
 <script>
@@ -95,8 +95,8 @@ export default @Component({
     id: String,
     metadata: Object,
     links: Object,
-    created: String,
-    updated: String,
+    created: String | Date,
+    updated: String | Date,
     revision: Number
   },
   components: {
@@ -150,20 +150,15 @@ class Record extends Vue {
       parent: this,
       title: this.$t('labels.editRecord'),
       value: this.metadata,
-      id: this.id
+      id: this.id || this.$route.params.recordId
     }).onOk(data => {
       this.recordChanged()
     })
   }
 
-  created () {
-    // TODO: add handle link just for demo purposes
-    this.links.video = this.metadata.source.replace('youtube.com/embed', 'youtube.com')
-    this.links.handle = `https://hdl.handle.net/20.500.12618/9999-${this.id}`
-  }
-
-  mount () {
-    this.links.handle = `https://hdl.handle.net/20.500.12618/9999-${this.id}`
+  get handleLink () {
+    const rid = this.id || this.$route.params.recordId
+    return `https://hdl.handle.net/20.500.12618/9999-${rid}`
   }
 }
 </script>

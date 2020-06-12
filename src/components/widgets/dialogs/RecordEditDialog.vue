@@ -156,7 +156,7 @@ class RecordEditDialog extends Vue {
   async submitRecord (record, onSuccess, onFailed, progress = true) {
     await this.ensureAuthenticated()
 
-    const cid = this.$oarepo.collection.collectionId
+    const cid = this.$oarepo.collection.collectionId || 'records'
     const rid = this.id
     this.$oarepo.record.load({ collectionId: cid, recordId: rid })
 
