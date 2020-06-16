@@ -118,17 +118,19 @@ q-form.q-gutter-md
 </template>
 
 <script>
-import { Component, Watch, Vue } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { required, url } from 'vuelidate/lib/validators'
 import { Validations } from 'vuelidate-property-decorators'
+import { FrozenValueMixin } from 'src/mixins/FrozenValueMixin'
+import { mixins } from 'vue-class-component'
 
 export default @Component({
   name: 'RecordForm',
   props: {
-    initial: Object
+    value: Object
   }
 })
-class RecordForm extends Vue {
+class RecordForm extends mixins(FrozenValueMixin) {
   difficultyOptions = ['beginner', 'intermediate', 'advanced', 'hacker']
   licenseOptions = ['CC BY', 'CC BY-SA', 'CC BY-ND', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-NC-ND']
   langOptions = ['cs', 'en']
@@ -185,9 +187,9 @@ class RecordForm extends Vue {
     }
   }
 
-  @Watch('initial')
+  @Watch('value')
   valueChanged () {
-    if (this.initial) {
+    if (this.value) {
       this.model = this.frozenValue()
     }
   }
@@ -215,16 +217,8 @@ class RecordForm extends Vue {
     this.valueChanged()
     this.resetValidation()
   }
-
-  frozenValue () {
-    // Get a copy of props to model without reactivity watchers
-    // Right now, this is probably the only working way to do it:
-    // https://forum.vuejs.org/t/how-to-clone-property-value-as-simple-object/40032/3
-    return JSON.parse(JSON.stringify(this.initial))
-  }
 }
 </script>
 
 <style lang="sass" scoped>
-
 </style>

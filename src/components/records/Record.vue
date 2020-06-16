@@ -28,8 +28,8 @@
           @click="systemInfoVisible = !systemInfoVisible"
           color="secondary"
           :icon="systemInfoVisible ? 'keyboard_arrow_right' : 'keyboard_arrow_left'")
-        record-basic-metadata.record__basic-metadata(
-          :class="[ systemInfoVisible ? 'col-8' : 'col-12']"
+        record-basic-metadata.q-pr-xl.col-12.record__basic-metadata(
+          v-show="!systemInfoVisible"
           :creator="metadata.creator"
           :license="metadata.license"
           :difficulty="metadata.difficulty"
@@ -37,7 +37,6 @@
           :formats="metadata.formats"
           :event="metadata.event"
           :contributors="metadata.contributors")
-        q-separator(vertical inset v-show="systemInfoVisible")
         transition(leave
           enter-active-class="animated slideInRight"
           leave-active-class="animated slideOutRight")
@@ -48,7 +47,7 @@
             :updated="updated"
             :revision="revision")
       q-separator(inset)
-      q-card-section.q-pt-xs(horizontal)
+      q-card-section.q-pt-xs(horizontal).wrap
         q-fab.absolute-bottom-right.q-ma-lg(
           v-if="!detail || owned"
           v-model="actionFab"
@@ -72,24 +71,35 @@
             external-label
             v-if="!detail"
             label-position="bottom"
-            @click="showRecordDetail"
+            @click="showRecordDetail(id)"
             color="black"
             icon="fullscreen"
             :label="$t('labels.recordDetailsBtn')")
-        record-links(:links="links" :handle="handleLink")
+        record-links.col-auto(:links="links" :handle="handleLink")
 </template>
 
 <script>
-import { Component, Emit, Vue } from 'vue-property-decorator'
-import RecordHeader from 'components/records/RecordHeader'
-import RecordEditDialog from 'components/widgets/dialogs/RecordEditDialog'
-import RecordSystemMetadata from 'components/records/RecordSystemMetadata'
+import { Component, Emit } from 'vue-property-decorator'
 import RecordBasicMetadata from 'components/records/RecordBasicMetadata'
+import RecordSystemMetadata from 'components/records/RecordSystemMetadata'
+import RecordHeader from 'components/records/RecordHeader'
 import RecordLinks from 'components/records/RecordLinks'
 import YoutubePlayer from 'components/widgets/YoutubePlayer'
+import { OwnedMixin } from 'src/mixins/OwnedMixin'
+import { mixins } from 'vue-class-component'
+import { RecordEditMixin } from 'src/mixins/RecordEditMixin'
+import { RecordDetailMixin } from 'src/mixins/RecordDetailMixin'
+import { HandleMixin } from 'src/mixins/HandleMixin'
 
 export default @Component({
   name: 'Record',
+  components: {
+    RecordLinks,
+    RecordHeader,
+    RecordSystemMetadata,
+    RecordBasicMetadata,
+    YoutubePlayer
+  },
   props: {
     detail: Boolean,
     id: String,
@@ -98,21 +108,17 @@ export default @Component({
     created: String | Date,
     updated: String | Date,
     revision: Number
-  },
-  components: {
-    RecordHeader,
-    RecordSystemMetadata,
-    RecordBasicMetadata,
-    RecordLinks,
-    RecordEditDialog,
-    YoutubePlayer
   }
 })
-class Record extends Vue {
+class Record extends mixins(
+    OwnedMixin,
+    RecordEditMixin,
+    RecordDetailMixin,
+    HandleMixin) {
   actionFab = false
+  systemInfoVisible = false
   headerClass = 'bg-grey-3'
   shadowClass = ''
-  systemInfoVisible = true
 
   @Emit('expand')
   onShow () {
@@ -124,41 +130,6 @@ class Record extends Vue {
   onHide () {
     this.shadowClass = ''
     this.headerClass = 'bg-grey-3'
-  }
-
-  get owned () {
-    if (this.auth$.loggedLocally) {
-      return this.metadata.owners.includes(this.auth$.authInfo.user.id)
-    }
-    return false
-  }
-
-  @Emit('change-record')
-  recordChanged () { }
-
-  showRecordDetail () {
-    this.$router.push({
-      name: 'record',
-      params: { collectionId: 'records', recordId: this.id }
-    })
-  }
-
-  showRecordEditor () {
-    this.$q.dialog({
-      component: RecordEditDialog,
-      maximized: true,
-      parent: this,
-      title: this.$t('labels.editRecord'),
-      value: this.metadata,
-      id: this.id || this.$route.params.recordId
-    }).onOk(data => {
-      this.recordChanged()
-    })
-  }
-
-  get handleLink () {
-    const rid = this.id || this.$route.params.recordId
-    return `https://hdl.handle.net/20.500.12618/9999-${rid}`
   }
 }
 </script>

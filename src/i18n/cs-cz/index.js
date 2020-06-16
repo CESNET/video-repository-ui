@@ -29,9 +29,10 @@ export default {
     createFormBtn: 'Zpět na formulář',
     createMoreBtn: 'Vytvořit další',
     createRecordBtn: 'Přidat záznam',
-    updateRecordBtn: 'Upravit',
+    updateRecordBtn: 'Upravit záznam',
     importJSONBtn: 'Importovat JSON',
     // Sections
+    preferences: 'Nastavení',
     recordDetail: 'Detail záznamu',
     editRecord: 'Upravit záznam',
     createNew: 'Vytvořit záznam',

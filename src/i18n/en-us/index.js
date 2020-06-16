@@ -29,9 +29,10 @@ export default {
     tryAgainBtn: 'Try Again',
     createMoreBtn: 'Create more',
     createRecordBtn: 'Add record',
-    updateRecordBtn: 'Edit',
+    updateRecordBtn: 'Update record',
     importJSONBtn: 'Import from JSON',
     // Sections
+    preferences: 'Preferences',
     recordDetail: 'Record',
     createNew: 'Create New Record',
     editRecord: 'Edit Record',

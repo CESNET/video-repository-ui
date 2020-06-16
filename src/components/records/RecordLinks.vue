@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card-section.q-pt-xs
   .text-overline.text-weight-bold.text-uppercase {{ $t('labels.record.links') }}
-  q-markup-table(flat dense separator="vertical")
+  q-markup-table(flat dense separator="vertical" wrap-cells)
     tbody
       tr(v-for="(uri, name) in links" :key="name")
         td
@@ -17,19 +17,15 @@ q-card-section.q-pt-xs
 
 <script>
 import { Component, Vue } from 'vue-property-decorator'
-
 export default @Component({
   name: 'RecordLinks',
   props: {
     handle: String,
     links: Object
-  },
-  components: {
   }
 })
 class RecordLinks extends Vue {
 }
 </script>
-
 <style lang="sass">
 </style>
